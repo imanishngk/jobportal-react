@@ -2,16 +2,17 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import ErrorFormText from "../component/ErrorFormText";
 
 export default function Signup() {
   // const [data, setData] = useState({});
 
   const [data, setData] = useState({
-    name:"test",
-    email:"test@g.com",
-    password:"test",
-    role:"user",
-    is_checked:true
+    name: "test",
+    email: "test@g.com",
+    password: "test",
+    role: "user",
+    is_checked: true,
   });
 
   const [error, setErrors] = useState({});
@@ -19,45 +20,54 @@ export default function Signup() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    let {name, email, password, role, is_checked} = data
+    let { name, email, password, role, is_checked } = data;
 
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/signup`,{
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/signup`, {
         name,
-        role, 
+        role,
         password,
-        email
-    }).then(function(response){
+        email,
+      })
+      .then(function (response) {
         console.log("signup success");
-        Navigate("/login")
-    })
-    .catch(function(error){
+        Navigate("/login");
+      })
+      .catch(function (error) {
         console.log(error.response.data.errors);
-        setErrors({})
+        setErrors({});
 
-        error.response.data.errors.forEach(el => {
-          setErrors((prev_error)=>{
-            return{
+        error.response.data.errors.forEach((el) => {
+          setErrors((prev_error) => {
+            return {
               ...prev_error,
-              [el.param]: el.msg
-            }
-          })
-        })
-    })
+              [el.param]: el.msg,
+            };
+          });
+        });
+      });
   }
 
   function handleChange(event) {
     const { name, value } = event.target;
 
+    // console.log("resul", name, value);
+
     setData({
       ...data,
       [name]: value,
     });
+
+    setErrors({
+      ...error,
+      [name]:""
+    })
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div class="mb-3">
-        <label class="form-label">Name</label>
+        <label class="form-label required">Name</label>
         <input
           type="text"
           class="form-control"
@@ -68,7 +78,7 @@ export default function Signup() {
         />
       </div>
       <div class="mb-3">
-        <label class="form-label">Email address</label>
+        <label class="form-label required" >Email address</label>
         <input
           type="email"
           class="form-control"
@@ -77,9 +87,14 @@ export default function Signup() {
           onChange={handleChange}
           value={data.email}
         />
+        <ErrorFormText 
+          field="email" 
+          errors={error}
+          data={data}
+        />
       </div>
       <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">
+        <label for="exampleInputPassword1" class="form-label required" required>
           Password
         </label>
         <input
@@ -89,6 +104,11 @@ export default function Signup() {
           name="password"
           onChange={handleChange}
           value={data.password}
+        />
+        <ErrorFormText 
+          field="password" 
+          errors={error}
+          data={data}
         />
       </div>
       <div class="mb-3">
@@ -109,12 +129,15 @@ export default function Signup() {
       </div>
 
       <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1" 
-        name="is_checked"
-        onChange={handleChange}
-        value = {data.is_checked}
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="exampleCheck1"
+          name="is_checked"
+          onChange={handleChange}
+          value={data.is_checked}
         />
-        <label class="form-check-label" for="exampleCheck1">
+        <label class="form-check-label required" for="exampleCheck1">
           Agree the terms and conditions
         </label>
       </div>

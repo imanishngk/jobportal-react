@@ -1,0 +1,16 @@
+body{
+    
+}
+
+a{
+    text-decoration: none;
+  }
+  
+.required::after{
+    content: "*";
+    color: red;
+}
+
+h1{
+    color: red;
+}

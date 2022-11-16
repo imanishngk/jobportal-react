@@ -3,6 +3,7 @@ import Navbar from "./component/Navbar";
 import { Routes, Route } from "react-router-dom";
 import Signup from "./page/Signup";
 import Home from "./page/Home";
+import "./assets/css/styles.css";
 
 function App() {
   return (
