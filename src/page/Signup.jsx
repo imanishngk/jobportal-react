@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import ErrorFormText from "../component/ErrorFormText";
@@ -8,9 +8,9 @@ export default function Signup() {
   // const [data, setData] = useState({});
 
   const [data, setData] = useState({
-    name: "test",
-    email: "test@g.com",
-    password: "test",
+    name: "Test1",
+    email: "Test1@g.com",
+    password: "test1",
     role: "user",
     is_checked: true,
   });
@@ -34,10 +34,14 @@ export default function Signup() {
         Navigate("/login");
       })
       .catch(function (error) {
-        console.log(error.response.data.errors);
-        setErrors({});
+        console.log("sighup error react");
+        console.log(error);
 
-        error.response.data.errors.forEach((el) => {
+        console.log(error.response.data.errors);
+       
+        setErrors({});  //reset state of error
+
+        error?.response?.data?.errors?.forEach((el) => {
           setErrors((prev_error) => {
             return {
               ...prev_error,
@@ -54,14 +58,14 @@ export default function Signup() {
     // console.log("resul", name, value);
 
     setData({
-      ...data,
-      [name]: value,
+      ...data, //spread operator
+      [name]: value, //object- not array
     });
 
     setErrors({
       ...error,
-      [name]:""
-    })
+      [name]: "",
+    });
   }
 
   return (
@@ -76,9 +80,10 @@ export default function Signup() {
           onChange={handleChange}
           value={data.name}
         />
+        <ErrorFormText field="name" errors={error} data={data} />
       </div>
       <div class="mb-3">
-        <label class="form-label required" >Email address</label>
+        <label class="form-label required">Email address</label>
         <input
           type="email"
           class="form-control"
@@ -87,11 +92,7 @@ export default function Signup() {
           onChange={handleChange}
           value={data.email}
         />
-        <ErrorFormText 
-          field="email" 
-          errors={error}
-          data={data}
-        />
+        <ErrorFormText field="email" errors={error} data={data} />
       </div>
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label required" required>
@@ -105,11 +106,7 @@ export default function Signup() {
           onChange={handleChange}
           value={data.password}
         />
-        <ErrorFormText 
-          field="password" 
-          errors={error}
-          data={data}
-        />
+        <ErrorFormText field="password" errors={error} data={data} />
       </div>
       <div class="mb-3">
         <label for="password" class="form-label required">
